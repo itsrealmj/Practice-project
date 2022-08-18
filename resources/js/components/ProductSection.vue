@@ -7,49 +7,86 @@
 			</form>
 		</div>
     <div class="container">
-      <figure v-for="post in matchProductNames" :key="post.id" >
-        <!-- <img :src="post.img" :alt="post.caption"> -->
-		<span> {{post.id}}</span>
-        <h4>{{post.name}}</h4>
-        <strong>$ {{post.price}}</strong><br>
-        <span> {{post.description}}</span><br>
-		<form action="/api/cart/" method="post">
-			<button type="submit" :value="post.id" name="id" class="btn btn-success"> Add to Cart</button>
-		</form>
-      </figure>
+		<figure v-for="post in matchProductNames" :key="post.id" >
+			<!-- <img :src="post.img" :alt="post.caption"> -->
+			<span> {{post.id}}</span>
+			<h4>{{post.name}}</h4>
+			<strong>$ {{post.price}}</strong><br>
+			<span> {{post.description}}</span><br>
+			<form action="/api/cart/" method="post">
+				<button type="submit" :value="post.id" name="id" class="btn btn-success"> Add to Cart</button>
+			</form>
+		</figure>
+		{{msg}}
     </div>
+
+	<button v-if="showPrevBtn" @click="prev(currentPage, lastPage)" :value="currentPage" class="btn btn-primary" >Prev</button>
+	
+	<button v-if="showNextBtn"  @click="next(currentPage, lastPage)" :value="lastPage" class=" btn btn-primary">Next</button>
   </section>
 </template>
 
 <script setup>
-import { ref , computed } from 'vue'
+import { ref , computed, onMounted} from 'vue'
 
 	const search = ref('')
 	const posts = ref([])
 	const error = ref(null) 
 
-	const load = async () => {
+	let currentPage = ref('')
+	let lastPage = ref('')
+	let msg = ref('')
+
+	let showPrevBtn = ref(true)
+	let showNextBtn = ref(true)
+
+	const load = async (page) => {
+		
 		try {
-			// fetches all data from DB products
-			let datas = await fetch('http://localhost:8000/api/data')
+			let datas = await fetch(`http://localhost:8000/api/data?page=${page}`)
+			console.log(datas)
 			if (!datas.ok) {
 				throw Error("Can't fetch data")
 			}
 			// assign all the fetch data to posts
 			posts.value = await datas.json()
+			console.log(posts.value.from)
+
+			currentPage.value = posts.value.current_page
+			lastPage.value = posts.value.last_page
+
+			posts.value = posts.value.data
 		}
 		catch(err) {
 			error.value = err.message
 		}
 	}
-	
 	load()
+
+	function next(currentPage, lastPage) {
+		if(lastPage > currentPage){
+			currentPage++
+			if(currentPage == lastPage) { showNextBtn.value = !showNextBtn.value }
+			load(currentPage)
+		}
+	}
+	function prev(currentPage, lastPage) {
+		
+		if(currentPage <= lastPage){
+			currentPage--
+			showNextBtn.value = true
+			load(currentPage)
+		}
+	}
+
+
 	// matchProductNames is an array which will return filtered clients search input
+
 	const matchProductNames = computed( () => {
 		return posts.value.filter((item) => {
 			search.value = search.value.toLocaleLowerCase()
 			item.name = item.name.toLocaleLowerCase()
-			
+
 			return item.name.includes(search.value)
 		})
 	});

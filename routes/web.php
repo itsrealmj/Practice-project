@@ -16,9 +16,13 @@ use App\Http\Controllers\ImageUploadController;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('app');
 });
+
+// Route::get('/', [productController::class, 'getProducts']);
 
 Auth::routes();
 

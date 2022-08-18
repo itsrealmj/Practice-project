@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\product;
 
+
 class productController extends Controller
 {
-    function getProducts()
+    function getProducts(Request $request)
     {
-        return product::all();
+        return product::paginate(3);
     }
+    
     // create a function to be pass to API
     // Request keyword is from above
     // product keyword is from above which is the singular of table
@@ -21,7 +23,6 @@ class productController extends Controller
         $product = new product;
         // product->name (table and value) $req->name (frontend inputs)
         $product->name = $req->name;
-        // $product->file_path = $req->file.store('app');
         $product->price = $req->price;
         $product->description = $req->description;
 
