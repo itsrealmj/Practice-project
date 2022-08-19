@@ -5,6 +5,7 @@
 			<form  class="w-50">
 				<input type="search" v-model="search" class="form-control" name="category" placeholder="Search here ...">
 			</form>
+
 		</div>
     <div class="container">
 		<figure v-for="post in matchProductNames" :key="post.id" >
@@ -17,17 +18,28 @@
 				<button type="submit" :value="post.id" name="id" class="btn btn-success"> Add to Cart</button>
 			</form>
 		</figure>
-		{{msg}}
     </div>
 
-	<button v-if="showPrevBtn" @click="prev(currentPage, lastPage)" :value="currentPage" class="btn btn-primary" >Prev</button>
-	
+	<button v-if="showPrevBtn" @click="prev(currentPage, lastPage)" :value="currentPage" class="btn btn-primary m-2" >Prev</button>
 	<button v-if="showNextBtn"  @click="next(currentPage, lastPage)" :value="lastPage" class=" btn btn-primary">Next</button>
-  </section>
+	<input type="text" class="change mx-2" v-model="change" /> 
+	({{item}}) 
+	
+
+
+ </section>
 </template>
 
 <script setup>
-import { ref , computed, onMounted} from 'vue'
+import { ref , computed, onMounted, watch} from 'vue'
+
+	
+	let change = ref(3)
+	let item = ref(null)
+
+	watch(change,() => {
+		load()
+	})
 
 	const search = ref('')
 	const posts = ref([])
@@ -35,31 +47,24 @@ import { ref , computed, onMounted} from 'vue'
 
 	let currentPage = ref('')
 	let lastPage = ref('')
-	let msg = ref('')
 
 	let showPrevBtn = ref(true)
 	let showNextBtn = ref(true)
 
-	const load = async (page) => {
+	const load = async (page=1) => {
 		
-		try {
-			let datas = await fetch(`http://localhost:8000/api/data?page=${page}`)
-			console.log(datas)
-			if (!datas.ok) {
-				throw Error("Can't fetch data")
-			}
-			// assign all the fetch data to posts
-			posts.value = await datas.json()
-			console.log(posts.value.from)
+		let datas = await window.axios.get(`http://localhost:8000/api/data`, {
+				params: {
+					page: page,
+					itemPerPage:change.value
+				}
+		})
+		item.value = datas.data.data.length
 
-			currentPage.value = posts.value.current_page
-			lastPage.value = posts.value.last_page
+		currentPage.value = datas.data.current_page
+		lastPage.value = datas.data.last_page
 
-			posts.value = posts.value.data
-		}
-		catch(err) {
-			error.value = err.message
-		}
+		posts.value = datas.data.data
 	}
 	load()
 
@@ -90,6 +95,8 @@ import { ref , computed, onMounted} from 'vue'
 			return item.name.includes(search.value)
 		})
 	});
+
+	
 
 </script>
 
@@ -130,6 +137,10 @@ import { ref , computed, onMounted} from 'vue'
 	}
 	.top-deal div img {
 		width:100px;
+	}
+	.top-deal .change {
+		text-align: center;
+		width: 40px;
 	}
 	
 </style>

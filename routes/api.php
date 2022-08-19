@@ -14,7 +14,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 // this was executed immediately fetching data from the database table
 Route::get('/data', [productController::class, 'getProducts']);
-// provide controller were you post 
 
 Route::post('/addProduct', [productController::class, 'addProduct']);
 
@@ -22,7 +21,7 @@ Route::post('/addProduct', [productController::class, 'addProduct']);
 Route::post('/delete', [productController::class, 'deleteProduct']);
 Route::post('/edit', [productController::class, 'editProduct']);
 Route::post('/update', [productController::class, 'updateProduct']);
-// Route::post('/cart', [productController::class, 'addToCart']);
+Route::post('/relation', [productController::class, 'relation']);
 
 
 // User registration // Controller

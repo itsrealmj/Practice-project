@@ -16,7 +16,10 @@
           <div class="user-img mt-3 ml-2 ">
 			
 			<img src="./assets/images/avatar-richard.png" alt="user-image" >
-			{{email}}
+			
+			<form action="/api/relation/" method="post">
+				<button type="submit">{{email}}</button>
+			</form>
 		  </div>
 		</ul>
 		
@@ -28,6 +31,10 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue"
+
+	function relation() {
+		
+	}
 
 	const email = ref('')
 

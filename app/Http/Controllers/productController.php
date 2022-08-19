@@ -10,12 +10,11 @@ class productController extends Controller
 {
     function getProducts(Request $request)
     {
-        return product::paginate(3);
+       return product::paginate($request->itemPerPage);
     }
     
-    // create a function to be pass to API
-    // Request keyword is from above
-    // product keyword is from above which is the singular of table
+  
+    
 
     function addProduct(Request $req)
     {
@@ -60,15 +59,14 @@ class productController extends Controller
     }
 
 
+    public function relation()
+    {
+        $posts = DB::select('select * from products');
+
+        dd($posts);
+    }
     
-    
 
 
 
-    // function editProduct(Request $req)
-    // {
-    //     $id = $req->id;
-    //     $data = product::find($id);
-    //     return view('editProduct',['data' => $data]);
-    // }
 }
