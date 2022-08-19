@@ -22,8 +22,9 @@
 
 	<button v-if="showPrevBtn" @click="prev(currentPage, lastPage)" :value="currentPage" class="btn btn-primary m-2" >Prev</button>
 	<button v-if="showNextBtn"  @click="next(currentPage, lastPage)" :value="lastPage" class=" btn btn-primary">Next</button>
-	<input type="text" class="change mx-2" v-model="change" /> 
+	<input type="number" class="change mx-2" v-model="change" /> 
 	({{item}}) 
+	Showing {{itemShowed}} total item {{totalItem}}
 	
 
 
@@ -36,6 +37,8 @@ import { ref , computed, onMounted, watch} from 'vue'
 	
 	let change = ref(3)
 	let item = ref(null)
+	let totalItem = ref(null)
+	let itemShowed = ref(null)
 
 	watch(change,() => {
 		load()
@@ -52,19 +55,25 @@ import { ref , computed, onMounted, watch} from 'vue'
 	let showNextBtn = ref(true)
 
 	const load = async (page=1) => {
-		
 		let datas = await window.axios.get(`http://localhost:8000/api/data`, {
-				params: {
-					page: page,
-					itemPerPage:change.value
-				}
+			params: {
+				page: page,
+				itemPerPage:change.value
+			}
 		})
+		
 		item.value = datas.data.data.length
+		totalItem.value = datas.data.total
 
 		currentPage.value = datas.data.current_page
 		lastPage.value = datas.data.last_page
 
+		console.log(datas.data.to)
+		itemShowed.value = datas.data.to
+
 		posts.value = datas.data.data
+
+		
 	}
 	load()
 

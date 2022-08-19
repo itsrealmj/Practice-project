@@ -1,27 +1,34 @@
 <template>
 	<header>
-      <nav >
+      <nav  class="position-relative">
         <img src="./assets/images/logo.svg" alt="logo" />
 		
         <ul>
-          <router-link to="/">Home</router-link>
-          <router-link to="/add">Add</router-link>
-          <router-link to="/productManagement">Management</router-link>
-          <router-link to="/login">Login</router-link>
-          <router-link to="/register">Signup</router-link>
+          <router-link v-if="isLogIn" to="/">Home</router-link>
+          <router-link v-if="isLogIn" to="/add">Add</router-link>
+          <router-link v-if="isLogIn" to="/productManagement">Management</router-link>
+		  <router-link v-if="isLogIn" to="/cart">Cart</router-link>
+          <router-link v-if="isLogOut" to="/login">Login</router-link>
+          <router-link v-if="isLogOut" to="/register">Signup</router-link>
+          
 
-		  <button @click="logout">Logout</button>
-		  
-          <router-link to="/cart">Cart</router-link>
-          <div class="user-img mt-3 ml-2 ">
-			
-			<img src="./assets/images/avatar-richard.png" alt="user-image" >
-			
-			<form action="/api/relation/" method="post">
-				<button type="submit">{{email}}</button>
-			</form>
+          <div v-if="isLogIn" class="user-img mt-3  " >
+			<img @click="setting" src="./assets/images/avatar-richard.png" alt="user-image">
+		 	<div  v-if="logOutBtn" class="log-out-section position-absolute ">
+				<strong class="btn btn-danger float-end" @click="closedBtn">X</strong>
+				<div class="p-5">
+					
+					<span >
+						{{email}}
+					</span>
+					<br>
+					<button class=" rounded px-1 btn btn-danger" @click="logout" >Logout</button>
+				</div>
+			</div> 
 		  </div>
+		  
 		</ul>
+
 		
       </nav>
     </header>
@@ -30,25 +37,37 @@
 
 </template>
 <script setup>
-import { onMounted, ref } from "vue"
+import { onMounted, ref } from "vue";
 
-	function relation() {
-		
+	let logOutBtn = ref(false)
+	function setting() {
+		logOutBtn.value = true
+
+	}
+	function closedBtn() {
+		logOutBtn.value = !logOutBtn
 	}
 
-	const email = ref('')
-
 	function logout() {
-		alert('You were logout')
+		alert('You just logout')
 		localStorage.clear()
 		window.location.href = '/login'
 	}
 	
+	let isLogIn = ref(true)
+	let isLogOut = ref(true)
+	const email = ref('')
 	onMounted(() => {
 		email.value = localStorage.getItem('user')
-	})
+		if(email.value){
+			isLogOut.value = !isLogOut
 
+		}else {
+			isLogIn.value = !isLogIn
+		}
+	})
 </script>
+
 <style>
 
 	header {
@@ -94,5 +113,16 @@ import { onMounted, ref } from "vue"
 
 	header .user-img img{
 		width: 35px;
+		cursor: pointer;
 	}
+
+	header nav .log-out-section {
+		background-color: rgb(233, 231, 231);
+		transition: 1s ;
+		border-radius: 10px;
+		right: 0%;
+		top:70%;
+		padding: 0;
+	}
+	
 </style>
