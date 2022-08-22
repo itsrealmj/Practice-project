@@ -2,18 +2,21 @@
 <template>
   <section class="product-mgt container-fluid">
     <h1>Product Management Section</h1>
-	<table class="w-100">
-		<tr>
+	<table class="container ">
+		<thead class=" ">
+		<tr >
 			<th><h5>ID</h5></th>
 			<th><h5>Name</h5></th>
 			<th><h5>Description</h5></th>
 			<th><h5>Price</h5></th>
 			<th><h5>Action</h5></th>
 		</tr>
+		</thead>
+		<tbody>
 		<tr v-for="post in posts" :key="post.id">
 			<td>{{post.id}}</td>
 			<td>{{post.name}}</td>
-			<td>{{post.description}}</td>
+			<td class="desc w-50">{{post.description}}</td>
 			<td>{{post.price}}</td>
 			
 			<td class="d-flex gap-2">
@@ -24,6 +27,7 @@
 				</form>
 			</td>
 		</tr>
+		</tbody>
 	</table>
   </section>
 </template>
@@ -34,21 +38,18 @@ name: "MainSection"
 
 		const posts = ref([])
 		const error = ref(null) 
-		const load = async () => {
+
+		const loadAllProduct = async () => {
 			try {
-				let datas = await fetch('http://localhost:8000/api/data')
-				if (!datas.ok) {
-					throw Error("Can't fetch data")
-				}
-				posts.value = await datas.json()
-				
+				let datas = await axios.get('http://localhost:8000/api/manage')
+				posts.value = datas.data
 			}
 			catch(err) {
 				error.value = err.message
 			}
 		}
 
-		load()
+		loadAllProduct()
 
     onMounted(() => {
         const userLog = localStorage.getItem('user')

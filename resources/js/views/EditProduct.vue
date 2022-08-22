@@ -38,12 +38,10 @@ export default {
 
 		const load = async () => {
 			try {
-				const datas = await fetch(`http://localhost:8000/api/data/`)
-				if (!datas.ok) {
-					throw Error("Can't fetch data")
-				}
+				const datas = await axios.get(`http://localhost:8000/api/manage/`)
 
-				const dataItems = await datas.json()
+				const dataItems = await datas.data
+
         // this will filter only one item which has the same value as the props.id 
         // and the single data from API endpoint
         dataItems.filter(item => {
@@ -57,7 +55,6 @@ export default {
 				error.value = err.message
 			}
 		}
-    console.log(post)
 		load()
 		return { post , error, load}
 	}

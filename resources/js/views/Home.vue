@@ -1,6 +1,6 @@
 <template>
     <Banner />
-    <Feature />
+    <!-- <Feature /> -->
     <!-- <MainSection /> -->
     <ProductSection />
     <Footer />

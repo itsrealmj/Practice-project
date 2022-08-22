@@ -25,7 +25,6 @@
 
 import {onMounted} from 'vue'
 
-
     onMounted(() => {
         const userLog = localStorage.getItem('user')
         if(!userLog) {

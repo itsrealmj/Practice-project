@@ -21,6 +21,9 @@ use App\Http\Controllers\ImageUploadController;
 Route::get('/', function () {
     return view('app');
 });
+Route::get('/cart', function () {
+    return redirect('/cart');
+});
 
 // Route::get('/', [productController::class, 'getProducts']);
 

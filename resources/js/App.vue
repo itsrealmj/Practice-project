@@ -15,14 +15,13 @@
           <div v-if="isLogIn" class="user-img mt-3  " >
 			<img @click="setting" src="./assets/images/avatar-richard.png" alt="user-image">
 		 	<div  v-if="logOutBtn" class="log-out-section position-absolute ">
-				<strong class="btn btn-danger float-end" @click="closedBtn">X</strong>
-				<div class="p-5">
-					
-					<span >
+				<img src="./assets/icon-close.svg" class="float-end closed-btn" @click="closedBtn" />
+				<div class="px-3 pt-5 pb-3 settings">
+					<div class="">
 						{{email}}
-					</span>
+					</div>
 					<br>
-					<button class=" rounded px-1 btn btn-danger" @click="logout" >Logout</button>
+					<button class="rounded btn btn-danger" @click="logout" >Logout</button>
 				</div>
 			</div> 
 		  </div>
@@ -118,11 +117,21 @@ import { onMounted, ref } from "vue";
 
 	header nav .log-out-section {
 		background-color: rgb(233, 231, 231);
-		transition: 1s ;
-		border-radius: 10px;
-		right: 0%;
-		top:70%;
-		padding: 0;
+		border-radius: 5px;
+		right: 1%;
+		box-shadow:1px 1px 10px 1px gray;
+	}
+	header nav .closed-btn {
+		padding: .5rem;
+		border-radius: 5px;
+		width: 30px;
+		transition: .3s ease;
+	}
+	header nav .closed-btn:hover {
+		background-color: #aba7a7;
+	} 
+	.settings {
+		font-size: 1.2rem;
 	}
 	
 </style>

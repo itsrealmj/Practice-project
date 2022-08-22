@@ -10,18 +10,20 @@ class productController extends Controller
 {
     function getProducts(Request $request)
     {
-       return product::paginate($request->itemPerPage);
+        return product::paginate($request->itemPerPage);
+    }
+    function manageProducts() 
+    {
+        return product::all();
     }
     
-  
-    
-
     function addProduct(Request $req)
     {
         // instanciate a new product
         $product = new product;
         // product->name (table and value) $req->name (frontend inputs)
         $product->name = $req->name;
+        $product->file_path = $req->file('image')->store('images');
         $product->price = $req->price;
         $product->description = $req->description;
 
@@ -57,6 +59,11 @@ class productController extends Controller
         $data->save();
         return redirect('/');
     }
+
+
+
+
+
 
 
     public function relation()

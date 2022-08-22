@@ -1,5 +1,30 @@
 <template>
-    <div class="sign-up-form w-50 m-auto mt-5 p-3 ">
+
+<div class="login-container">
+        <h4>SIGN UP</h4>
+
+        <form action="/api/register" method="post">
+            <label >Name </label>
+            <input type="text" name="name" v-model="name" class="form-control" placeholder="Name" required>
+            
+            <label class="mb-2" >Email address</label>
+            <input type="email" name="email" v-model="email" class="form-control" placeholder="Enter email" required>
+            
+            <label class="mb-2">Password</label>
+            <input type="password" name="password" v-model="password" class="form-control" placeholder="Password" required>
+        
+            <button class="w-100">LOGIN </button>
+
+            <div class="mt-3">
+                
+                <span>Already has an account ? <router-link to="/login">LOGIN</router-link></span>
+                
+            </div>
+        </form>
+
+    </div>
+
+    <!-- <div class="sign-up-form w-50 m-auto mt-5 p-3 ">
         <div class="form-group rounded" >
             <label >Name </label>
             <input type="text" name="name" v-model="name" class="form-control" placeholder="Name" required>
@@ -15,7 +40,7 @@
             <input type="password" name="password" v-model="password" class="form-control" placeholder="Password" required>
         </div>
         <button type="submit" @click="signUp" class="btn btn-primary mt-3">Signup</button>
-    </div>
+    </div> -->
 </template>
  <script setup> 
 import axios from 'axios';
