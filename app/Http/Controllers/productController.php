@@ -10,8 +10,11 @@ class productController extends Controller
 {
     function getProducts(Request $request)
     {
-        return product::paginate($request->itemPerPage);
+        $data = product::where('name', 'LIKE','%'.$request->search.'%')->paginate($request->itemPerPage);
+        // return response()->json($data);
+        return $data;
     }
+
     function manageProducts() 
     {
         return product::all();
@@ -19,14 +22,16 @@ class productController extends Controller
     
     function addProduct(Request $req)
     {
+        $imageName = $req->file('image')->getClientOriginalName();
         // instanciate a new product
         $product = new product;
         // product->name (table and value) $req->name (frontend inputs)
         $product->name = $req->name;
-        $product->file_path = $req->file('image')->store('images');
+        // $product->file_path = $req->file('image')->store('images');
+        $product->file_path = $req->file('image')->storeAs('public/images', $imageName);
+        // $product->file_path = $req->file('image')->storeAs($imageName);
         $product->price = $req->price;
         $product->description = $req->description;
-
         $result = $product->save();
 
         if($result) {

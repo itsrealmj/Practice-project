@@ -8,15 +8,20 @@
 
 		</div>
 		<div class="row d-flex justify-content-around">
-			<figure class="col-xs-12 col-sm-6 col-md-4 col-lg-3 each-product " v-for="post in matchProductNames" :key="post.id" >
-				<img src="../assets/laptop.png"/>
-				<!-- <span> {{post.id}}</span> -->
-				<h4>{{post.name}}</h4>
-				<!-- <h5> {{post.description}}</h5> -->
-				<strong class="text-danger">$ {{post.price}}</strong><br>
+			<figure class="col-xs-6 col-sm-6 col-md-4 col-lg-3 each-product " v-for="post in posts" :key="post.id" >
+				<!-- <img src="../assets/laptop.png"/> -->
 
-				<form action="/api/addcart/" method="post">
-					<button type="submit" :value="post.id" name="id" class="add-to-cart-btn"> Add to Cart</button>
+				<img :src="`../storage/images/${post.file_path.substring(14)}`">
+
+				<!-- <img :src="`../storage/images/mike.jpg`"> -->
+				<!-- <span> {{post.id}}</span> -->
+				<span>{{post.name}}</span>
+				<span class="product-price text-light px-3 bg-dark">${{post.price}} </span>
+				<!-- <h5> {{post.description}}</h5> -->
+
+				<!-- <form action="/api/addcart/" method="post"> -->
+				<form @submit.prevent="addedToCart(post.id)">
+					<button type="submit" :value="post.id" name="id" class="add-to-cart-btn mt-2"> Add to Cart</button>
 				</form>
 			</figure>
 		</div>
@@ -24,18 +29,21 @@
  <div class="paginated-section ">
 	<div class="showing">Showing {{ itemShowed }} Items of {{ totalItem }} -> </div>
 
-	<button v-if="showPrevBtn" @click="prev(currentPage, lastPage)" :value="currentPage" class="" >Previous</button>
+	<button v-if="showPrevBtn " @click="prev(currentPage, lastPage)" :value="currentPage" class="" >Previous</button>
+	<strong class="page">Page {{ currentPage }} of {{lastPage}} </strong> 
 	<button v-if="showNextBtn"  @click="next(currentPage, lastPage)" :value="lastPage" class=" ">Next</button>
 	<!-- <input type="number" class="change mx-2" v-model="change" />  -->
 	<!-- ({{item}})  -->
  </div>
+
+<Message v-if="showMessage" class="fixed-top" severity="success">Added to cart</Message>
 </template>
 
 <script setup>
 import { ref , computed, onMounted, watch} from 'vue'
+import Message from 'primevue/message';
 
-	let change = ref(8)
-	let item = ref(null)
+	let change = ref(4)
 	let totalItem = ref(null)
 	let itemShowed = ref(null)
 
@@ -45,6 +53,7 @@ import { ref , computed, onMounted, watch} from 'vue'
 
 	const search = ref('')
 	const posts = ref([])
+
 	const error = ref(null) 
 
 	let currentPage = ref('')
@@ -53,31 +62,33 @@ import { ref , computed, onMounted, watch} from 'vue'
 	let showPrevBtn = ref(true)
 	let showNextBtn = ref(true)
 
-	watch(search,() => {
-		load()
-	})
-
-	const load = async (page=1) => {
-		let datas = await window.axios.get(`http://localhost:8000/api/data`,{
+	const load = async (page=1, search) => {
+		const datas = await window.axios.get(`http://localhost:8000/api/data`,{
 			params: {
 				page: page,
-				itemPerPage:change.value
+				itemPerPage:change.value,
+				search:search
 			}
 		})
+		const {total, current_page, last_page, to, prev_page_url, data} = datas.data
 
-		item.value = datas.data.data.length
-		totalItem.value = datas.data.total
+		totalItem.value = total
+		currentPage.value = current_page
+		lastPage.value = last_page
+		itemShowed.value = to
 
-		currentPage.value = datas.data.current_page
-		lastPage.value = datas.data.last_page
+		posts.value = data
 
-		itemShowed.value = datas.data.to
-
-		posts.value = datas.data.data
-
-		
 	}
+
 	load()
+
+	// Watching changes of the search input and fire the load() function again
+	watch(search,() => {
+		load(1,search.value)
+	})
+
+	// Function for NEXT BUTTON
 	function next(currentPage, lastPage) {
 		if(lastPage > currentPage){
 			currentPage++
@@ -85,8 +96,9 @@ import { ref , computed, onMounted, watch} from 'vue'
 			load(currentPage)
 		}
 	}
+
+	// Function for previous BUTTON
 	function prev(currentPage, lastPage) {
-		
 		if(currentPage <= lastPage){
 			currentPage--
 			showNextBtn.value = true
@@ -94,19 +106,24 @@ import { ref , computed, onMounted, watch} from 'vue'
 		}
 	}
 
-
-	// matchProductNames is an array which will return filtered clients search input
-
-	const matchProductNames = computed( () => {
-		return posts.value.filter((item) => {
-			search.value = search.value.toLocaleLowerCase()
-			item.name = item.name.toLocaleLowerCase()
-			
-			return item.name.includes(search.value)
-		})
-	});
-
 	
+	// Added to Cart BUTTON
+	let showMessage = ref(false)
+
+	async function addedToCart(id) {
+		 const addedItem = await axios.post(`/api/addcart/`, {
+      		id:id
+  		})
+		if(addedItem.status === 200) {
+			showMessage.value = true
+
+			setTimeout(() => {
+				showMessage.value = false
+			},2000)
+			// window.location.href = '/'
+		}
+	}
+
 
 </script>
 
@@ -118,8 +135,10 @@ import { ref , computed, onMounted, watch} from 'vue'
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		background : #f1f1f1;
-		color:rgba(0,0,0, .7)
+		/* background : #f1f1f1; */
+		background:rgb(1, 1, 23);
+		/* color:rgba(0,0,0, .7) */
+		color:#f1f1f1;
 	}
 	.top-deal div {
 		display:flex;
@@ -154,13 +173,28 @@ import { ref , computed, onMounted, watch} from 'vue'
 	}
 	.top-deal .each-product {
 		width: 250px;
+		position: relative;
+	}
+	.top-deal .product-price {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 1rem;
+		font-size: 1.1rem;
+		font-weight: bold;
+		transform: rotate(10deg);
+
 	}
 	.top-deal .each-product img {
 		width: 100%;
+		height: 250px;
+		object-fit: cover;
 	}
 	.top-deal .each-product .add-to-cart-btn {
-		color: orangered;
-		background-color: transparent;
+		/* color: orangered; */
+		color:#f1f1f1;
+		background:rgb(1, 1, 23);
+		/* background-color: transparent; */
 		padding: .3rem .5rem;
 		font-weight: bold;
 		border-radius: 5px;
@@ -184,6 +218,13 @@ import { ref , computed, onMounted, watch} from 'vue'
 		background: white;
 		border: 1px solid rgb(1, 1, 23);;
 		font-weight: bold;
+		padding: .5rem 1rem;
+	}
+	.page {
+		border-bottom: 1px solid rgb(1, 1, 23);;
+		color:rgb(1, 1, 23);;
+		font-weight: bold;
+		font-size: 14px;
 		padding: .5rem 1rem;
 	}
 </style>

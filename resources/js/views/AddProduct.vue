@@ -1,5 +1,5 @@
 <template>
-<form action="/api/addProduct" method="post" class="add-product-form mt-5 w-50">
+<form action="/api/addProduct" enctype="multipart/form-data" method="post" class="add-product-form mt-5 w-50">
       <div class="mb-3">
         <label class="form-label">Product Name</label>
         <input type="text" class="form-control" name="name" placeholder="Product name">
@@ -7,7 +7,7 @@
       
       <div class="mb-3">
         <label class="form-label">Upload photo</label>
-        <input type="file" class="form-control" name="file">
+        <input type="file" class="form-control" name="image">
       </div>
       <div class="mb-3">
         <label class="form-label">Product Price</label>

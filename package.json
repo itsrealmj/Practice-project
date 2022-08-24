@@ -18,6 +18,8 @@
         "@vitejs/plugin-vue": "^3.0.2",
         "@vue/compiler-sfc": "^3.2.37",
         "laravel-vue-pagination": "^3.0.0",
+        "primeicons": "^5.0.0",
+        "primevue": "^3.16.2",
         "vue": "^3.2.36",
         "vue-loader": "^17.0.0",
         "vue-router": "^4.0.13"

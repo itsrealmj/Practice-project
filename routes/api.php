@@ -38,7 +38,8 @@ Route::post('/deletecart', [addedToCartController::class, 'deleteCart']);
 
 
 // User registration // Controller
-Route::post('/store', [userController::class, 'store']);
+Route::post('/register', [userController::class, 'store']);
 // Route::get('/login', [userController::class, 'getUsers']);
 Route::post('/login', [userController::class, 'verifyUser']);
+// Route::get('/login', [userController::class, 'verifyUser']);
 

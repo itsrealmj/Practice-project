@@ -1,9 +1,12 @@
 <template>
-
+    <div>
+        <img class="blob" src="@/assets/blob.svg" alt="">
+    </div>
 <div class="login-container">
         <h4>SIGN UP</h4>
 
-        <form action="/api/register" method="post">
+        <!-- <form action="/api/register" method="post"> -->
+        <form @submit.prevent="signUp">
             <label >Name </label>
             <input type="text" name="name" v-model="name" class="form-control" placeholder="Name" required>
             
@@ -52,7 +55,7 @@ import {ref, onMounted} from 'vue'
     const password = ref('')
 
     function signUp() {
-        axios.post('/api/store', {
+        axios.post('/api/register', {
             name : name.value,
             email: email.value,
             password: password.value

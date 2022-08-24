@@ -2,7 +2,6 @@
 	<header>
       <nav  class="position-relative">
         <img src="./assets/images/logo.svg" alt="logo" />
-		
         <ul>
           <router-link v-if="isLogIn" to="/">Home</router-link>
           <router-link v-if="isLogIn" to="/add">Add</router-link>
@@ -27,11 +26,9 @@
 		  </div>
 		  
 		</ul>
-
-		
       </nav>
     </header>
-	
+
     <router-view />
 
 </template>
@@ -64,13 +61,14 @@ import { onMounted, ref } from "vue";
 		}else {
 			isLogIn.value = !isLogIn
 		}
-	})
+	});
 </script>
 
 <style>
 
 	header {
-		background-color : #f1f1f1;
+		background-color : white;
+		box-shadow: 1px 1px 5px 1px gray;
 		position:sticky;
 		top:0;
 		z-index:2;
@@ -92,7 +90,8 @@ import { onMounted, ref } from "vue";
         font-size: 1.1rem;
 		text-decoration:none;
 		position:relative;
-		color:rgba(0,0,0, .7);
+		/* color:rgba(0,0,0, .7); */
+		color:rgb(1, 1, 23);
 		font-weight:600;
 
 	}

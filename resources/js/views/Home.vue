@@ -14,13 +14,17 @@ import Feature from '../components/Feature.vue'
 import ProductSection from '../components/ProductSection.vue'
 
 import {onMounted} from 'vue'
+import axios from 'axios'
 
 components: {Banner, Footer, Feature, ProductSection}
+    // onMounted(() => {
+    //     const userLog = localStorage.getItem('user')
+    //     if(!userLog) {
+    //         window.location.href = '/login'
+    //     }
+    // })
+        
+        
+    
 
-    onMounted(() => {
-        const userLog = localStorage.getItem('user')
-        if(!userLog) {
-            window.location.href = '/login'
-        }
-    })
 </script>

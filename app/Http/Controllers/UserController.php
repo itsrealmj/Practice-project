@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\user;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\user;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -106,11 +108,23 @@ class UserController extends Controller
 
     public function verifyUser(Request $request)
     {
+
         $email = $request->email;
         $password = $request->password;
-        
 
-        $userEmail = user::find('users.email');
-        dd($userEmail);
+        $emailUser = DB::table('users')->where('email', $email)->value('email');
+        $passwordUser = DB::table('users')->where('password', $password)->value('password');
+
+        if($emailUser !== null) {
+            if($passwordUser !== null) {
+                return redirect('/');
+            }else {
+                // return 'Wrong password';
+                dd('wrong password');
+            }
+        }else {
+            dd('wrong email');
+        }
+
     }
 }

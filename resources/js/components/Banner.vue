@@ -12,7 +12,7 @@
         </ul>
       </aside>
       <div class="promo-section">
-        <img src="../assets/banner.jpg">
+        <img src="../assets/banner1.jpg">
       </div>
     </section>
 </template>
@@ -44,12 +44,12 @@ export default {
 		margin:1rem auto 0;
 		display:flex;
 		gap:1rem;
-		/* background-color: red; */
-		/* width:90%; */
 		height:350px;
     }
 	.banner-section aside {
 		background : #f1f1f1;
+		background : #A62349;
+		/* background:rgb(1, 1, 23); */
 		border-radius:5px;
 		width:200px;
 	}
@@ -58,7 +58,8 @@ export default {
 		line-height:2.5rem;
 	}
 	aside ul li a {
-		color:rgba(0,0,0, .7);
+		/* color: white; */
+		color: rgba(0, 0, 0, 0.635);
 		font-weight:600;
 		text-decoration : none;
 		position: relative;

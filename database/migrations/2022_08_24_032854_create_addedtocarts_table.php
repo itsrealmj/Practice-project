@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('cart_product_name');
             $table->string('cart_product_desc');
             $table->integer('cart_product_qty');
+            $table->string('cart_product_path');
             $table->float('cart_product_price');
             $table->timestamps();
         });
