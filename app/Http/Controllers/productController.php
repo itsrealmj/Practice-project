@@ -20,22 +20,20 @@ class productController extends Controller
         return product::all();
     }
     
-    function addProduct(Request $req)
-    {
-        $imageName = $req->file('image')->getClientOriginalName();
-        // instanciate a new product
+    function addProduct(Request $request)
+    {   
+        
+        $imageName = $request->file('image')->getClientOriginalName();
         $product = new product;
-        // product->name (table and value) $req->name (frontend inputs)
-        $product->name = $req->name;
-        // $product->file_path = $req->file('image')->store('images');
-        $product->file_path = $req->file('image')->storeAs('public/images', $imageName);
-        // $product->file_path = $req->file('image')->storeAs($imageName);
-        $product->price = $req->price;
-        $product->description = $req->description;
+        // product->name (table and value) $request->name (frontend inputs)
+        $product->name = $request->name;
+        $product->file_path = $request->file('image')->storeAs('public/images', $imageName);
+        $product->price = $request->price;
+        $product->description = $request->description;
         $result = $product->save();
 
         if($result) {
-            return redirect('/');
+            return redirect('/add');
         }else {
             return 'Unable to save data';
         }
@@ -56,29 +54,17 @@ class productController extends Controller
     {
         $id = $req->id;
         $data = product::find($id);
+        
+        // $imageName = $req->file('image')->getClientOriginalName();
 
         $data->name = $req->name;
         $data->price = $req->price;
         $data->description = $req->description;
+        // $product->file_path = $req->file('image')->storeAs('public/images', $imageName);
 
         $data->save();
-        return redirect('/');
+        return redirect('/productManagement');
     }
-
-
-
-
-
-
-
-    public function relation()
-    {
-        $posts = DB::select('select * from products');
-
-        dd($posts);
-    }
-    
-
 
 
 }

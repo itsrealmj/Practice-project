@@ -1,7 +1,8 @@
 <template>
-<h1 style="text-align:center;"> Edit Section</h1>
+<h1 style="text-align:center" class="mt-3"> Edit Product</h1>
+
 <form action="/api/update/" method="post" class="add-product-form mt-5">
-  <div>
+  <div class="w-50 m-auto">
     <input type="hidden" :value="post.id" name="id">
     <div class="mb-3">
       <label class="form-label">Product Name</label>
@@ -20,14 +21,15 @@
       <label class="form-label">Products Description</label>
       <input type="text" class="form-control" name="description" rows="3" :value="post.description"/>
     </div>
-    
-    <button type="submit" class="btn btn-success">Update</button>
+    <Button type="submit" icon="pi pi-check" class="mr-2 mb-2" label="Update"> </Button>
   </div>
 </form>
+
 </template>
 
 <script>
 import { ref } from 'vue'
+import Button from 'primevue/button';
 
 export default {
     props: ['id'],

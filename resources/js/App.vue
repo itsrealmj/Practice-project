@@ -65,7 +65,11 @@ import { onMounted, ref } from "vue";
 </script>
 
 <style>
-
+	.router-link-exact-active {
+		color:rgba(0, 0, 255, 0.805);
+		font-style: italic;
+		text-shadow: 1px 2px 3px gray;
+	}
 	header {
 		background-color : white;
 		box-shadow: 1px 1px 5px 1px gray;
@@ -102,7 +106,7 @@ import { onMounted, ref } from "vue";
 	    left: 0;
 	    height: 3px;
 	    width: 0;
-	    background-color: red;
+	    background-color: orangered;
 	    transition: .3s ease-in-out;
 	}
 	header nav ul a:hover::after {

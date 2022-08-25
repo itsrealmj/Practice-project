@@ -20,36 +20,82 @@
 			<td>{{post.price}}</td>
 			
 			<td class="d-flex gap-2">
-				<router-link class="btn btn-success" :to="{ name: 'EditProduct', params: {id:post.id} }">edit</router-link>
-				<!-- this will go to routes/api with the delete post request -->
-				<form action="/api/delete/" method="post">
-					<button type="submit" :value="post.id" name="id" class="btn btn-danger"> delete</button>
-				</form>
+				<router-link :to="{ name: 'EditProduct', params: {id:post.id} }">
+					<Button class="p-button-outlined" >Edit</Button>
+				</router-link>
+				
+				<div>
+					<ConfirmPopup></ConfirmPopup>
+					<ConfirmPopup group="demo">
+						<template #message="slotProps">
+							<div class="flex p-4">
+								<i :class="slotProps.message.icon" style="font-size: 1.5rem"></i>
+								<p class="pl-2">{{slotProps.message.message}}</p>
+							</div>
+						</template>
+					</ConfirmPopup>
+					<Toast />
+					<Button @click="confirm2($event,post.id)" icon="pi pi-times" label="Delete" class="p-button-danger p-button-outlined"></Button>
+				</div>
 			</td>
 		</tr>
 		</tbody>
 	</table>
   </section>
+
 </template>
 <script setup>	
+
 import { ref, onMounted } from 'vue'
+import ConfirmPopup from 'primevue/confirmpopup';
+import Button from 'primevue/button';
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
-name: "MainSection"
 
-		const posts = ref([])
-		const error = ref(null) 
 
-		const loadAllProduct = async () => {
-			try {
-				let datas = await axios.get('http://localhost:8000/api/manage')
-				posts.value = datas.data
+// name: "MainSection"
+
+	const confirm = useConfirm();
+	const toast = useToast();
+
+	const confirm2 = (event,id) => {
+		confirm.require({
+			target: event.currentTarget,
+			message: 'Do you want to delete this record?',
+			icon: 'pi pi-info-circle',
+			acceptClass: 'p-button-danger',
+			accept: () => {
+				deleteProduct(id)
+				toast.add({severity:'info', summary:'Confirmed', detail:'Record deleted', life: 3000});
+			},
+			reject: () => {
+				toast.add({severity:'error', summary:'Rejected', detail:'You have rejected', life: 3000});
 			}
-			catch(err) {
-				error.value = err.message
-			}
-		}
+		});
+	}
 
+	async function deleteProduct(id) {
+		const data = await axios.post(`/api/delete/`, {id: id})
+		console.log(data.status)
 		loadAllProduct()
+	} 
+
+	const posts = ref([])
+	const error = ref(null) 
+
+	const loadAllProduct = async () => {
+		try {
+			let datas = await axios.get('http://localhost:8000/api/manage')
+			posts.value = datas.data
+		}
+		catch(err) {
+			error.value = err.message
+		}
+	}
+
+	loadAllProduct()
 
     onMounted(() => {
         const userLog = localStorage.getItem('user')
@@ -57,6 +103,7 @@ name: "MainSection"
             window.location.href = '/login'
         }
     });	
+
 
 </script>
 <style>

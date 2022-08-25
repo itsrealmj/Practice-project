@@ -16,7 +16,7 @@
             <label class="mb-2">Password</label>
             <input type="password" name="password" v-model="password" class="form-control" placeholder="Password" required>
         
-            <button class="w-100">LOGIN </button>
+            <button class="w-100">SIGN UP </button>
 
             <div class="mt-3">
                 

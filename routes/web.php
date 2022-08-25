@@ -22,7 +22,19 @@ Route::get('/', function () {
     return view('app');
 });
 
-Route::get('/login', [userController::class, 'verifyUser']);
+Route::get('/{add}', function () {
+    return view('app');
+})->where('add', '.*');
+
+Route::get('/{productManagement}', function () {
+    return view('app');
+})->where('productManagement', '.*');
+
+Route::get('/{cart}', function () {
+    return view('app');
+})->where('cart', '.*');
+
+// Route::get('/login', [userController::class, 'verifyUser']);
 
 // Route::get('/', [productController::class, 'getProducts']);
 

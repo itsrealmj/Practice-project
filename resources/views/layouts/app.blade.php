@@ -74,7 +74,7 @@
         </nav>
 
         <main class="py-4">
-            <!-- @yield('content') -->
+            @yield('content')
         </main>
     </div>
     @vite('resources/js/app.js')

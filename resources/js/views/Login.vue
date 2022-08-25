@@ -1,4 +1,5 @@
 <template>
+<ProgressSpinner v-if="loadingSpinner" class="loading-spinner"  />
      <div>
         <img class="blob" src="@/assets/blob.svg" alt="">
     </div>
@@ -20,27 +21,17 @@
         </form>
     </div>
      
-
-    <!-- <div class="sign-up-form w-50 m-auto mt-5 p-3 ">
-        <div class="form-group mt-3">
-            <label >Email address</label>
-            <input type="email" name="email" v-model="email"  placeholder="Enter email" required>
-        </div>
-
-        <div class="form-group mt-3">
-            <label>Password</label>
-            <input type="password" name="password" v-model="password" class="form-control" placeholder="Password" required>
-        </div>
-        <button type="submit" @click="login" class="btn btn-primary mt-3">Login</button>
-    </div> -->
 </template>
  <script setup> 
 import axios from 'axios'
 import {ref, onMounted} from 'vue'
+import ProgressSpinner from 'primevue/progressspinner';
+
 
 let email = ref('')
 let password = ref(null)
 
+    let loadingSpinner = ref(false)
     const loginNow = async () => {
         const data = await axios.post(`http://localhost:8000/api/login`, {
             email: email.value,
@@ -48,8 +39,8 @@ let password = ref(null)
         }).catch((err) => {
             alert('wrong email or password')
         })
-
         if(data.status === 200) {
+            loadingSpinner.value = true
             window.location.href = '/';
             localStorage.setItem('user', JSON.stringify(email.value))
         }
@@ -68,6 +59,11 @@ let password = ref(null)
     
  </script>
 <style >
+    .loading-spinner {
+        position: absolute;
+        top: 40%;
+        left: 45%;
+    }
     .sign-up-form {
         box-shadow:1px 1px 10px 1px rgba(215, 215, 245, 0.6);
     }

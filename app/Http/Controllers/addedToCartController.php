@@ -14,21 +14,17 @@ class addedToCartController extends Controller
     {   
         $product = addedtocart::find($request->id);
         $result = $product->delete();
-        // if($result) {
-        // return redirect('/');
-
-        // }
-        
-
     }
 
     public function addToCart(Request $request)
     {
+        // $nameOnly = $request->name;
+        
         $product = product::find($request->id);
-
-        if(addedtocart::find($request->id)) {
-            dd('added already');
-        }
+        
+        // if($nameOnly == $product->name) {
+        //     dd('added already');
+        // }
         
         $addedCart = new addedtocart;
 

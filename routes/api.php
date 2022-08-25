@@ -19,10 +19,7 @@ Route::get('/data', [productController::class, 'getProducts']);
 
 Route::get('/manage', [productController::class, 'manageProducts']);
 
-
-
 Route::post('/addProduct', [productController::class, 'addProduct']);
-
 
 // this handle the route rquest and send details to productcontroller class and perform the function delete 
 Route::post('/delete', [productController::class, 'deleteProduct']);

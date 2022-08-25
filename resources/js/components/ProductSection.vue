@@ -1,26 +1,30 @@
 <template>
+
     <section class="top-deal container">
 		<div class="product-section p-2">
 			<h1 class="px-3">TOP DEALS</h1>
-			<form  class="w-50">
-				<input type="search" v-model="search" class="form-control" name="category" placeholder="Search here ...">
-			</form>
+
+			<div class="p-2">
+				<span class="p-float-label p-input-icon-right">
+					<i class="pi pi-search" />
+					<InputText class="p-1 " id="inputtext-right" type="text" v-model="search" name="category"/>
+					<label for="inputtext-right">Search name</label>
+				</span>
+			</div>
 
 		</div>
 		<div class="row d-flex justify-content-around">
 			<figure class="col-xs-6 col-sm-6 col-md-4 col-lg-3 each-product " v-for="post in posts" :key="post.id" >
 				<!-- <img src="../assets/laptop.png"/> -->
-
 				<img :src="`../storage/images/${post.file_path.substring(14)}`">
 
-				<!-- <img :src="`../storage/images/mike.jpg`"> -->
-				<!-- <span> {{post.id}}</span> -->
 				<span>{{post.name}}</span>
 				<span class="product-price text-light px-3 bg-dark">${{post.price}} </span>
 				<!-- <h5> {{post.description}}</h5> -->
 
-				<!-- <form action="/api/addcart/" method="post"> -->
-				<form @submit.prevent="addedToCart(post.id)">
+				<!-- <Rating  v-model="val2" :cancel="false" name="cancel" class="rating  m-1"/> -->
+				
+				<form @submit.prevent="addedToCart(post.id, post.name)">
 					<button type="submit" :value="post.id" name="id" class="add-to-cart-btn mt-2"> Add to Cart</button>
 				</form>
 			</figure>
@@ -33,15 +37,17 @@
 	<strong class="page">Page {{ currentPage }} of {{lastPage}} </strong> 
 	<button v-if="showNextBtn"  @click="next(currentPage, lastPage)" :value="lastPage" class=" ">Next</button>
 	<!-- <input type="number" class="change mx-2" v-model="change" />  -->
-	<!-- ({{item}})  -->
  </div>
-
-<Message v-if="showMessage" class="fixed-top" severity="success">Added to cart</Message>
+<Toast></Toast>
 </template>
 
 <script setup>
 import { ref , computed, onMounted, watch} from 'vue'
 import Message from 'primevue/message';
+import InputText from 'primevue/inputtext';
+import Rating from 'primevue/rating';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 
 	let change = ref(4)
 	let totalItem = ref(null)
@@ -71,14 +77,12 @@ import Message from 'primevue/message';
 			}
 		})
 		const {total, current_page, last_page, to, prev_page_url, data} = datas.data
-
 		totalItem.value = total
 		currentPage.value = current_page
 		lastPage.value = last_page
 		itemShowed.value = to
 
 		posts.value = data
-
 	}
 
 	load()
@@ -108,19 +112,15 @@ import Message from 'primevue/message';
 
 	
 	// Added to Cart BUTTON
-	let showMessage = ref(false)
+	const toast = useToast();
 
-	async function addedToCart(id) {
+	async function addedToCart(id, name) {
 		 const addedItem = await axios.post(`/api/addcart/`, {
-      		id:id
+      		id:id,
+			name: name
   		})
 		if(addedItem.status === 200) {
-			showMessage.value = true
-
-			setTimeout(() => {
-				showMessage.value = false
-			},2000)
-			// window.location.href = '/'
+        	toast.add({severity:'success', summary: 'Info Message', detail:'Added to cart', life: 3000});
 		}
 	}
 

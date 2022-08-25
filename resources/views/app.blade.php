@@ -11,6 +11,7 @@
 <!-- JavaScript Bundle with Popper -->
         @vite('resources/css/app.css')
 
+
     </head>
     <body >
         <div id="app">
